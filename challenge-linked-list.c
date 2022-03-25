@@ -13,6 +13,7 @@ void awal() {
   system("cls");
   struct node *ptr;
   int item;
+
   ptr = (struct node *)malloc(sizeof(struct node *));
   if (ptr == NULL) {
     printf("OVERFLOW!");
@@ -22,7 +23,7 @@ void awal() {
     ptr->data = item;
     ptr->next = head;
     head = ptr;
-    printf("\nData berhasil tersimpan di NODE awal!\n");
+    printf("Data berhasil tersimpan di NODE awal!\n");
   }
 }
 
@@ -36,13 +37,13 @@ void akhir() {
   if (ptr == NULL) {
     printf("OVERFLOW!");
   } else {
-    printf("Masukkan data: ");
+    printf("Masukkan data : ");
     scanf("%d", &item);
     ptr->data = item;
     if (head == NULL) {
       ptr->next = NULL;
       head = ptr;
-      printf("Behasil menyimpan NODE!");
+      printf("Berhasil menyimpan NODE!");
     } else {
       temp = head;
       while (temp->next != NULL) {
@@ -70,13 +71,19 @@ void sembarang() {
     ptr->data = item;
     printf("Mau simpan dilokasi berapa? ");
     scanf("%d", &loc);
+    // atasi bug ketika data kosong atau jika loc < 0
+    if (head == NULL || loc < 0) {
+      printf("Tidak bisa simpan datamu!");
+			return;
+    }
+
     temp = head;
     for (int i = 0; i < loc; i++) {
+      temp = temp->next;
       if (temp == NULL) {
         printf("Tidak bisa simpan datamu!");
         return;
       }
-      temp = temp->next;
     }
     ptr->next = temp->next;
     temp->next = ptr;
@@ -122,20 +129,22 @@ void hapusSembarang() {
   int loc;
   printf("Mau hapus dilokasi berapa? ");
   scanf("%d", &loc);
-  if (loc <= 0) {
-    printf("Lokasi tidak valid!j");
+	
+	// tidak bisa hapus data jika data kosong dan jika loc <= 0. Agar terhindar dari bug
+  if (head == NULL || loc <= 0) {
+    printf("Tidak bisa hapus data!");
     return;
   }
 
   temp = head;
   prev = head;
   for (int i = 0; i < loc; i++) {
-    if (temp->next == NULL) {
-      printf("Tidak bisa simpan data!");
-      return;
-    }
     prev = temp;
     temp = temp->next;
+    if (temp == NULL) {
+      printf("Tidak bisa hapus data!");
+      return;
+    }
   }
   prev->next = temp->next;
   free(temp);
